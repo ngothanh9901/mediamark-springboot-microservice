@@ -1,13 +1,11 @@
-package com.example.demo;
+package com.example.springcloudgatewayclient;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
-
+public class SpringCloudGatewayClientApplication {
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(SpringCloudGatewayClientApplication.class, args);
     }
-
 }

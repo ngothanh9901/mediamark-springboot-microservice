@@ -1,0 +1,35 @@
+
+server:
+  port: 8083
+
+
+spring:
+  application.name: backend-gateway-client
+  cloud:
+    gateway:
+      routes:
+        - id: resources
+          uri: lb://BACKEND-RESOURCES/messages
+          predicates:
+            Path=/messages/**
+          filters:
+            TokenRelay=
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway:
+            provider: my-provider
+            client-id: gateway-client-id
+            client-secret: my-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://backend-gateway-client:8083/login/oauth2/code/{registrationId}"
+            scope: openid, message.read
+        provider:
+          my-provider:
+            issuer-uri: http://backend-auth:8081
+eureka:
+  instance:
+    client:
+      serviceUrl:
+        defaultZone=http://localhost:8761/eureka/:

@@ -8,10 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="spring-cloud-eureka-server" />
-        <module name="user-service" />
         <module name="authorization-server" />
-        <module name="demo" />
         <module name="spring-cloud-config-server" />
+        <module name="product-service" />
+        <module name="user-service" />
+        <module name="order-service" />
+        <module name="demo" />
         <module name="spring-cloud-gateway-client" />
       </profile>
     </annotationProcessing>
@@ -20,6 +22,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="authorization-server" options="-parameters" />
       <module name="demo" options="-parameters" />
+      <module name="order-service" options="-parameters" />
+      <module name="product-service" options="-parameters" />
       <module name="spring-cloud-config-server" options="-parameters" />
       <module name="spring-cloud-eureka-server" options="-parameters" />
       <module name="spring-cloud-gateway-client" options="-parameters" />

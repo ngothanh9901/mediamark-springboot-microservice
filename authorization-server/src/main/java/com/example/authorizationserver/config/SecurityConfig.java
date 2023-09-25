@@ -126,6 +126,10 @@ public class SecurityConfig {
             }
             if (context.getTokenType().getValue().equals("access_token")) {
                 context.getClaims().claim("Test", "Test Access Token");
+                context.getClaims().claim("id", t.getUser().getId());
+                context.getClaims().claim("name", t.getUser().getName());
+                context.getClaims().claim("username", t.getUser().getUsername());
+                context.getClaims().claim("gmail", t.getUser().getEmail());
                 context.getClaims().claim("authorities", authorities);
 //                context.getClaims().claim("gmail", t.);
             }

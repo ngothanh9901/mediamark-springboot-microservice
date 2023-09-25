@@ -1,4 +1,4 @@
-package com.example.userservice.common.model;
+package com.example.productservice.common.model;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

@@ -17,17 +17,22 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Orders extends UserDateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean status = false;
+  @Column(columnDefinition = "boolean default false")
+  private boolean status = false;
 
-    @Column(nullable = false)
-    private Long userId;
+  @Column(nullable = false)
+  private Long userId;
 
-    @OneToMany(mappedBy="orders")
-    @JsonIgnore
-    private List<OrderDetailItem> orderDetailList = new ArrayList<>();
+  @OneToMany(mappedBy = "orders")
+  @JsonIgnore
+  private List<OrderDetailItem> orderDetailList = new ArrayList<>();
+
+  public Orders(Long userId) {
+    this.userId = userId;
+  }
+
 }

@@ -1,6 +1,7 @@
 package com.example.productservice.service.impl;
 
 import com.example.productservice.dto.parameter.ProductParameter;
+import com.example.productservice.dto.request.GetProductByIdsRequest;
 import com.example.productservice.mapper.ProductMapper;
 import com.example.productservice.model.Category;
 import com.example.productservice.model.Product;
@@ -47,5 +48,10 @@ public class ProductServiceImpl implements ProductService {
     productRepository.save(product);
 
     return product;
+  }
+
+  @Override
+  public List<Product> getProductByIds(GetProductByIdsRequest request) {
+    return productRepository.findAllById(request.getProductIds());
   }
 }

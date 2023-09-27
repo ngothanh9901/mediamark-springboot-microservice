@@ -1,6 +1,7 @@
 package com.example.orderservice.service.impl;
 
 import com.example.orderservice.dto.ProductDto;
+import com.example.orderservice.dto.ProductItemCartDto;
 import com.example.orderservice.dto.response.CartResponse;
 import com.example.orderservice.dto.resquest.AddToCartRequest;
 import com.example.orderservice.dto.resquest.GetProductByIdsRequest;
@@ -13,9 +14,6 @@ import com.example.orderservice.service.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,14 +50,22 @@ public class CartServiceImpl implements CartService {
     return null;
   }
 
-  private CartResponse getOrder(Orders order){
+  private CartResponse cart(Orders order) {
 //    get list product id
     List<OrderDetailItem> orderDetailItems = order.getOrderDetailList();
     List<Long> productIds = orderDetailItems.stream().map(OrderDetailItem::getProductId).collect(Collectors.toList());
 
-//    get product by ids
+//    get product by ids through product-service ( feign)
     GetProductByIdsRequest getProductByIdsRequest = new GetProductByIdsRequest(productIds);
     List<ProductDto> products = productClient.getProductByIds(getProductByIdsRequest);
+
+
+    List<ProductItemCartDto> productItemCarts = products.stream().map(x -> {
+      ProductItemCartDto productItemCartDto = new ProductItemCartDto(x);
+      productItemCartDto.setProductCartId(order.getId());
+//      productItemCartDto.setQuantity(x.g);
+      return productItemCartDto;
+    }).collect(Collectors.toList());
 
 
     return null;

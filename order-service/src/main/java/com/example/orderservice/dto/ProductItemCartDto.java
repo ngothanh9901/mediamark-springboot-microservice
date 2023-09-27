@@ -19,4 +19,11 @@ public class ProductItemCartDto {
   private Long productCartId;
   private Long quantity;
 
+  public ProductItemCartDto(ProductDto productDto) {
+    this.productId = productDto.getId();
+    this.name = productDto.getName();
+    this.price = productDto.getPrice();
+    this.shortDes = productDto.getShortDes();
+    this.linkImg = productDto.getLinkImg();
+  }
 }

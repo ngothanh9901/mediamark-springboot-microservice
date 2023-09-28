@@ -13,4 +13,5 @@ public interface ProductService {
   Product save(ProductParameter parameter);
   List<Product> getProductByIds(GetProductByIdsRequest request);
   ResponseObject<ProductResponse> getProduct(GetProductRequest request);
+  Product getProductById(Long productId);
 }

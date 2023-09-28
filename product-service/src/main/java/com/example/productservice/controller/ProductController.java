@@ -27,6 +27,10 @@ public class ProductController {
     GetProductRequest request = new GetProductRequest(parameter.getText(),parameter.getCategoryIds(),pageable);
     return productService.getProduct(request);
   }
+  @GetMapping("/{id}")
+  public Product getProductById(@PathVariable("id") Long productId) {
+    return productService.getProductById(productId);
+  }
 
   @PostMapping("/")
   public Product save(@Valid @RequestBody ProductParameter parameter) {

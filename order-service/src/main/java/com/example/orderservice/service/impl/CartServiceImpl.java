@@ -15,6 +15,7 @@ import com.example.orderservice.service.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,8 +63,12 @@ public class CartServiceImpl implements CartService {
     List<Long> productIds = orderDetailItems.stream().map(OrderDetailItem::getProductId).collect(Collectors.toList());
 
 //    get product by ids through product-service ( feign)
-    GetProductByIdsRequest getProductByIdsRequest = new GetProductByIdsRequest(productIds);
-    List<ProductDto> products = productClient.getProductByIds(getProductByIdsRequest);
+//    GetProductByIdsRequest getProductByIdsRequest = new GetProductByIdsRequest(productIds);
+//    List<ProductDto> products = productClient.getProductByIds(getProductByIdsRequest);
+    List<ProductDto> products = orderDetailItems.stream().map(
+        x->productClient.getProductById(x.getProductId())
+    ).collect(Collectors.toList());
+
 
 
     List<ProductItemCartDto> productItemCarts = products.stream().map(x -> {

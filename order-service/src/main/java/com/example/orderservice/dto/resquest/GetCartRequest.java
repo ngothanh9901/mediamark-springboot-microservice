@@ -1,4 +1,4 @@
-package com.example.orderservice.dto.parameter;
+package com.example.orderservice.dto.resquest;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddToCartParameter {
-    private Long productId;
+public class GetCartRequest {
+  private Long userId;
 }

@@ -9,13 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AddToCartRequest {
-    private Long productId;
-    private Long quantity;
-    private Long userId;
+  private Long productId;
+  private Long userId;
 
-    public AddToCartRequest(Long productId, Long quantity, Long userId) {
-        this.productId = productId;
-        this.quantity = quantity;
-        this.userId = userId;
-    }
+  public AddToCartRequest(Long productId, Long userId) {
+    this.productId = productId;
+    this.userId = userId;
+  }
 }

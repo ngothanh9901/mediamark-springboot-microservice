@@ -2,6 +2,9 @@ package com.example.productservice.service.impl;
 
 import com.example.productservice.dto.parameter.ProductParameter;
 import com.example.productservice.dto.request.GetProductByIdsRequest;
+import com.example.productservice.dto.request.GetProductRequest;
+import com.example.productservice.dto.response.ProductResponse;
+import com.example.productservice.dto.response.ResponseObject;
 import com.example.productservice.mapper.ProductMapper;
 import com.example.productservice.model.Category;
 import com.example.productservice.model.Product;
@@ -9,6 +12,7 @@ import com.example.productservice.repository.CategoryRepository;
 import com.example.productservice.repository.ProductRepository;
 import com.example.productservice.service.ProductService;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -36,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     List<Category> categories = new ArrayList<>();
     if (!CollectionUtils.isEmpty(parameter.getCategoryIds())) {
       categories = parameter.getCategoryIds().parallelStream()
-          .map(c->categoryRepository.findById(c).get())
+          .map(c -> categoryRepository.findById(c).get())
           .collect(Collectors.toList());
     }
 
@@ -53,5 +57,16 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public List<Product> getProductByIds(GetProductByIdsRequest request) {
     return productRepository.findAllById(request.getProductIds());
+  }
+
+  @Override
+  public ResponseObject<ProductResponse> getProduct(GetProductRequest request) {
+    Page<Product> products = productRepository.findProduct(request.getText(),request.getPageable());
+    List<ProductResponse> content = products.stream().map(x->productMapper.toProductResponse(x)).collect(Collectors.toList());
+
+    ResponseObject<ProductResponse> result = new ResponseObject<>(content,products.getNumber()+1,products.getSize(),
+        products.getTotalElements(),products.getTotalPages(),products.isLast());
+
+    return result;
   }
 }

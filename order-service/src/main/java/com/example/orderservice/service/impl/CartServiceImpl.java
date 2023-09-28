@@ -4,6 +4,7 @@ import com.example.orderservice.dto.ProductDto;
 import com.example.orderservice.dto.ProductItemCartDto;
 import com.example.orderservice.dto.response.CartResponse;
 import com.example.orderservice.dto.resquest.AddToCartRequest;
+import com.example.orderservice.dto.resquest.GetCartRequest;
 import com.example.orderservice.dto.resquest.GetProductByIdsRequest;
 import com.example.orderservice.feign.ProductClient;
 import com.example.orderservice.model.OrderDetailItem;
@@ -46,8 +47,13 @@ public class CartServiceImpl implements CartService {
 //    save into database
     orderDetailItemRepository.save(orderDetail);
     cart.getOrderDetailList().add(orderDetail);
+    return cart(cart);
+  }
 
-    return null;
+  @Override
+  public CartResponse getCart(GetCartRequest request) {
+    Orders cart = orderRepository.findByStatusAndUserId(false, request.getUserId());
+    return cart(cart);
   }
 
   private CartResponse cart(Orders order) {

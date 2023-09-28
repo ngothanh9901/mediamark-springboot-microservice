@@ -63,11 +63,15 @@ public class CartServiceImpl implements CartService {
     List<ProductItemCartDto> productItemCarts = products.stream().map(x -> {
       ProductItemCartDto productItemCartDto = new ProductItemCartDto(x);
       productItemCartDto.setProductCartId(order.getId());
-//      productItemCartDto.setQuantity(x.g);
+
+      OrderDetailItem productItem = orderDetailItems.stream().filter(y->y.getProductId().equals(x.getId())).findFirst().get();
+      productItemCartDto.setQuantity(productItem.getQuantity());
+
       return productItemCartDto;
     }).collect(Collectors.toList());
 
+    Long sum = productItemCarts.stream().mapToLong(p->{return p.getQuantity()*p.getPrice();}).sum();
 
-    return null;
+    return new CartResponse(productItemCarts,sum,order.getId());
   }
 }

@@ -1,11 +1,11 @@
 package com.example.orderservice.service.impl;
 
+import com.example.orderservice.cache.ProductCache;
 import com.example.orderservice.dto.ProductDto;
 import com.example.orderservice.dto.ProductItemCartDto;
 import com.example.orderservice.dto.response.CartResponse;
 import com.example.orderservice.dto.resquest.AddToCartRequest;
 import com.example.orderservice.dto.resquest.GetCartRequest;
-import com.example.orderservice.dto.resquest.GetProductByIdsRequest;
 import com.example.orderservice.feign.ProductClient;
 import com.example.orderservice.model.OrderDetailItem;
 import com.example.orderservice.model.Orders;
@@ -15,7 +15,6 @@ import com.example.orderservice.service.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +22,12 @@ import java.util.stream.Collectors;
 public class CartServiceImpl implements CartService {
   private final OrderRepository orderRepository;
   private final OrderDetailItemRepository orderDetailItemRepository;
-  private final ProductClient productClient;
+  private final ProductCache productCache;
 
-  public CartServiceImpl(OrderRepository orderRepository, OrderDetailItemRepository orderDetailItemRepository, ProductClient productClient) {
+  public CartServiceImpl(OrderRepository orderRepository, OrderDetailItemRepository orderDetailItemRepository, ProductCache productCache) {
     this.orderRepository = orderRepository;
     this.orderDetailItemRepository = orderDetailItemRepository;
-    this.productClient = productClient;
+    this.productCache = productCache;
   }
 
   @Transactional
@@ -60,29 +59,24 @@ public class CartServiceImpl implements CartService {
   private CartResponse cart(Orders order) {
 //    get list product id
     List<OrderDetailItem> orderDetailItems = order.getOrderDetailList();
-    List<Long> productIds = orderDetailItems.stream().map(OrderDetailItem::getProductId).collect(Collectors.toList());
 
-//    get product by ids through product-service ( feign)
-//    GetProductByIdsRequest getProductByIdsRequest = new GetProductByIdsRequest(productIds);
-//    List<ProductDto> products = productClient.getProductByIds(getProductByIdsRequest);
     List<ProductDto> products = orderDetailItems.stream().map(
-        x->productClient.getProductById(x.getProductId())
+        x -> productCache.getProductById(x.getProductId())
     ).collect(Collectors.toList());
-
 
 
     List<ProductItemCartDto> productItemCarts = products.stream().map(x -> {
       ProductItemCartDto productItemCartDto = new ProductItemCartDto(x);
       productItemCartDto.setProductCartId(order.getId());
 
-      OrderDetailItem productItem = orderDetailItems.stream().filter(y->y.getProductId().equals(x.getId())).findFirst().get();
+      OrderDetailItem productItem = orderDetailItems.stream().filter(y -> y.getProductId().equals(x.getId())).findFirst().get();
       productItemCartDto.setQuantity(productItem.getQuantity());
 
       return productItemCartDto;
     }).collect(Collectors.toList());
 
-    Long sum = productItemCarts.stream().mapToLong(p->{return p.getQuantity()*p.getPrice();}).sum();
+    Long sum = productItemCarts.stream().mapToLong(p -> p.getQuantity() * p.getPrice()).sum();
 
-    return new CartResponse(productItemCarts,sum,order.getId());
+    return new CartResponse(productItemCarts, sum, order.getId());
   }
 }
